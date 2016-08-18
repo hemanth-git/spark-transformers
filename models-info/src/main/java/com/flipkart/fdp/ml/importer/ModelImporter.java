@@ -1,5 +1,6 @@
 package com.flipkart.fdp.ml.importer;
 
+import com.flipkart.fdp.ml.modelinfo.AbstractModelInfo;
 import com.flipkart.fdp.ml.modelinfo.ModelInfo;
 import com.flipkart.fdp.ml.modelinfo.PipelineModelInfo;
 import com.flipkart.fdp.ml.transformer.Transformer;
@@ -34,7 +35,7 @@ public class ModelImporter {
      * @param serializedModelInfo byte[] representing the serialized data
      * @return model info imported of type {@link ModelInfo}
      */
-    public static ModelInfo importModelInfo(byte[] serializedModelInfo) {
+    public static AbstractModelInfo importModelInfo(byte[] serializedModelInfo) {
         String data = new String(serializedModelInfo, SerializationConstants.CHARSET);
         Map<String, String> map = gson.fromJson(data, new TypeToken<Map<String, String>>() {
         }.getType());
@@ -46,15 +47,14 @@ public class ModelImporter {
         }
         if (modelClass == PipelineModelInfo.class) {
             String[] serializedModelInfos = gson.fromJson(map.get(SerializationConstants.MODEL_INFO_IDENTIFIER), String[].class);
-            ModelInfo[] modelInfos = new ModelInfo[serializedModelInfos.length];
+            AbstractModelInfo[] modelInfos = new AbstractModelInfo[serializedModelInfos.length];
             for (int i = 0; i < modelInfos.length; i++) {
                 modelInfos[i] = importModelInfo(serializedModelInfos[i].getBytes());
             }
-            PipelineModelInfo pipelineModelInfo = new PipelineModelInfo();
-            pipelineModelInfo.setStages(modelInfos);
+            PipelineModelInfo pipelineModelInfo = new PipelineModelInfo(modelInfos);
             return pipelineModelInfo;
         } else {
-            return (ModelInfo) gson.fromJson(map.get(SerializationConstants.MODEL_INFO_IDENTIFIER), modelClass);
+            return (AbstractModelInfo) gson.fromJson(map.get(SerializationConstants.MODEL_INFO_IDENTIFIER), modelClass);
         }
     }
 }

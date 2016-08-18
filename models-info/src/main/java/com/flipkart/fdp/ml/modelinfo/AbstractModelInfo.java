@@ -11,5 +11,5 @@ import java.util.Set;
 @Setter
 public abstract class AbstractModelInfo implements ModelInfo {
     private Set<String> inputKeys = new LinkedHashSet<>(Arrays.asList("input"));
-    private String outputKey = "output";
+    private String outputKey = "input";
 }

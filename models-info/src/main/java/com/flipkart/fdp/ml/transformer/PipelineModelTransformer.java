@@ -3,6 +3,7 @@ package com.flipkart.fdp.ml.transformer;
 import com.flipkart.fdp.ml.modelinfo.PipelineModelInfo;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Transforms input/ predicts for a Pipeline model representation
@@ -13,7 +14,6 @@ public class PipelineModelTransformer implements Transformer {
     private final PipelineModelInfo modelInfo;
     private final Transformer transformers[];
 
-    //TODO: support for non linear pipelines by deriving input and output column name from model being exported
     public PipelineModelTransformer(final PipelineModelInfo modelInfo) {
         this.modelInfo = modelInfo;
         transformers = new Transformer[modelInfo.getStages().length];
@@ -28,4 +28,13 @@ public class PipelineModelTransformer implements Transformer {
             transformer.transform(input);
         }
     }
+
+    public Set<String> getInputKeys() {
+        return modelInfo.getInputKeys();
+    }
+
+    public String getOutputKey() {
+        return modelInfo.getOutputKey();
+    }
+
 }
