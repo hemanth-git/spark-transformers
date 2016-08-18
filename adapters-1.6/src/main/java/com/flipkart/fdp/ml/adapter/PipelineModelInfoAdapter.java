@@ -1,7 +1,7 @@
 package com.flipkart.fdp.ml.adapter;
 
 import com.flipkart.fdp.ml.ModelInfoAdapterFactory;
-import com.flipkart.fdp.ml.modelinfo.ModelInfo;
+import com.flipkart.fdp.ml.modelinfo.AbstractModelInfo;
 import com.flipkart.fdp.ml.modelinfo.PipelineModelInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.ml.PipelineModel;
@@ -16,13 +16,12 @@ import org.apache.spark.sql.DataFrame;
 public class PipelineModelInfoAdapter extends AbstractModelInfoAdapter<PipelineModel, PipelineModelInfo> {
     @Override
     public PipelineModelInfo getModelInfo(final PipelineModel from, final DataFrame df) {
-        final PipelineModelInfo modelInfo = new PipelineModelInfo();
-        final ModelInfo stages[] = new ModelInfo[from.stages().length];
+        final AbstractModelInfo stages[] = new AbstractModelInfo[from.stages().length];
         for (int i = 0; i < from.stages().length; i++) {
             Transformer sparkModel = from.stages()[i];
-            stages[i] = ModelInfoAdapterFactory.getAdapter(sparkModel.getClass()).adapt(sparkModel, df);
+            stages[i] = (AbstractModelInfo) ModelInfoAdapterFactory.getAdapter(sparkModel.getClass()).adapt(sparkModel, df);
         }
-        modelInfo.setStages(stages);
+        final PipelineModelInfo modelInfo = new PipelineModelInfo(stages);
         return modelInfo;
     }
 
