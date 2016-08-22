@@ -2,7 +2,7 @@ package com.flipkart.fdp.ml.importer;
 
 import com.flipkart.fdp.ml.modelinfo.AbstractModelInfo;
 import com.flipkart.fdp.ml.modelinfo.ModelInfo;
-import com.flipkart.fdp.ml.modelinfo.PipelineModelInfo;
+import com.flipkart.fdp.ml.modelinfo.PipelineModel;
 import com.flipkart.fdp.ml.transformer.Transformer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,14 +45,14 @@ public class ModelImporter {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        if (modelClass == PipelineModelInfo.class) {
+        if (modelClass == PipelineModel.class) {
             String[] serializedModelInfos = gson.fromJson(map.get(SerializationConstants.MODEL_INFO_IDENTIFIER), String[].class);
             AbstractModelInfo[] modelInfos = new AbstractModelInfo[serializedModelInfos.length];
             for (int i = 0; i < modelInfos.length; i++) {
                 modelInfos[i] = importModelInfo(serializedModelInfos[i].getBytes());
             }
-            PipelineModelInfo pipelineModelInfo = new PipelineModelInfo(modelInfos);
-            return pipelineModelInfo;
+            PipelineModel pipelineModel = new PipelineModel(modelInfos);
+            return pipelineModel;
         } else {
             return (AbstractModelInfo) gson.fromJson(map.get(SerializationConstants.MODEL_INFO_IDENTIFIER), modelClass);
         }

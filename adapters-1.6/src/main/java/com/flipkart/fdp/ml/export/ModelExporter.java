@@ -3,7 +3,7 @@ package com.flipkart.fdp.ml.export;
 import com.flipkart.fdp.ml.ModelInfoAdapterFactory;
 import com.flipkart.fdp.ml.importer.SerializationConstants;
 import com.flipkart.fdp.ml.modelinfo.ModelInfo;
-import com.flipkart.fdp.ml.modelinfo.PipelineModelInfo;
+import com.flipkart.fdp.ml.modelinfo.PipelineModel;
 import com.flipkart.fdp.ml.utils.Constants;
 import com.google.gson.Gson;
 import org.apache.spark.sql.DataFrame;
@@ -44,12 +44,12 @@ public class ModelExporter {
         map.put(SerializationConstants.SPARK_VERSION, Constants.SUPPORTED_SPARK_VERSION_PREFIX);
         map.put(SerializationConstants.EXPORTER_LIBRARY_VERSION, Constants.LIBRARY_VERSION);
         map.put(SerializationConstants.TYPE_IDENTIFIER, modelInfo.getClass().getCanonicalName());
-        if (modelInfo instanceof PipelineModelInfo) {
+        if (modelInfo instanceof PipelineModel) {
             //custom serialization is needed as type is not encoded into gson serialized modelInfo
-            PipelineModelInfo pipelineModelInfo = (PipelineModelInfo) modelInfo;
-            String[] serializedModels = new String[pipelineModelInfo.getStages().length];
+            PipelineModel pipelineModel = (PipelineModel) modelInfo;
+            String[] serializedModels = new String[pipelineModel.getStages().length];
             for (int i = 0; i < serializedModels.length; i++) {
-                serializedModels[i] = export(pipelineModelInfo.getStages()[i]);
+                serializedModels[i] = export(pipelineModel.getStages()[i]);
             }
             map.put(SerializationConstants.MODEL_INFO_IDENTIFIER, gson.toJson(serializedModels));
         } else {

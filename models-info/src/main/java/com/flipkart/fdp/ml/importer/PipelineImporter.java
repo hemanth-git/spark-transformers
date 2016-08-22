@@ -1,18 +1,17 @@
 package com.flipkart.fdp.ml.importer;
 
 import com.flipkart.fdp.ml.modelinfo.ModelInfo;
-import com.flipkart.fdp.ml.modelinfo.PipelineModelInfo;
-import com.flipkart.fdp.ml.transformer.PipelineModelTransformer;
+import com.flipkart.fdp.ml.modelinfo.PipelineModel;
 
 /**
  * Created by akshay.us on 8/18/16.
  */
 public class PipelineImporter {
-    public static PipelineModelTransformer importAndGetTransformer(byte[] serializedModelInfo) {
+    public static PipelineModel importAndGetTransformer(byte[] serializedModelInfo) {
         ModelInfo modelInfo = ModelImporter.importModelInfo(serializedModelInfo);
-        if(! (modelInfo instanceof PipelineModelInfo)) {
+        if(! (modelInfo instanceof PipelineModel)) {
             throw new RuntimeException("Model to be imported is not a pipeline model. It is "+ modelInfo.getClass());
         }
-        return (PipelineModelTransformer) modelInfo.getTransformer();
+        return (PipelineModel) modelInfo.getTransformer();
     }
 }

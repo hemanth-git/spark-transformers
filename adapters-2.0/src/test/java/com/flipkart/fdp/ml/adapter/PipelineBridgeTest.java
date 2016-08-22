@@ -1,8 +1,7 @@
 package com.flipkart.fdp.ml.adapter;
 
-import com.flipkart.fdp.ml.export.ModelExporter;
-import com.flipkart.fdp.ml.importer.ModelImporter;
-import com.flipkart.fdp.ml.transformer.Transformer;
+import com.flipkart.fdp.ml.export.PipelineExporter;
+import com.flipkart.fdp.ml.importer.PipelineImporter;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -66,11 +65,12 @@ public class PipelineBridgeTest extends SparkTestBase {
 
 
         //Export this model
-        byte[] exportedModel = ModelExporter.export(sparkPipelineModel);
+        byte[] exportedModel = PipelineExporter.export(sparkPipelineModel);
         System.out.println(new String(exportedModel));
 
         //Import and get Transformer
-        Transformer transformer = ModelImporter.importAndGetTransformer(exportedModel);
+        com.flipkart.fdp.ml.modelinfo.PipelineModel transformer = PipelineImporter.importAndGetTransformer(exportedModel);
+
 
         //prepare test data
         StructType testSchema = createStructType(new StructField[]{
